@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import {
   BsFillPeopleFill,
   BsFillLockFill,
-  BsFillGeoAltFill,
   BsFillEnvelopeFill,
   BsFillTelephoneFill,
   BsFillHouseFill,
-  BsFillPinMapFill,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { UserAddIcon } from "@heroicons/react/solid";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from "axios";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -24,21 +23,17 @@ const SignUp = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [zip, setZip] = useState("");
   const [checked, setChecked] = useState(false);
+  const [role, setRole] = useState("student"); // État pour le rôle
 
   const [errClientName, setErrClientName] = useState("");
   const [errEmail, setErrEmail] = useState("");
   const [errPhone, setErrPhone] = useState("");
   const [errPassword, setErrPassword] = useState("");
   const [errAddress, setErrAddress] = useState("");
-  const [errCity, setErrCity] = useState("");
-  const [errCountry, setErrCountry] = useState("");
-  const [errZip, setErrZip] = useState("");
 
   const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleName = (e) => {
     setClientName(e.target.value);
@@ -60,18 +55,10 @@ const SignUp = () => {
     setAddress(e.target.value);
     setErrAddress("");
   };
-  const handleCity = (e) => {
-    setCity(e.target.value);
-    setErrCity("");
+  const handleRoleChange = (e) => {
+    setRole(e.target.value); // Mettre à jour le rôle sélectionné
   };
-  const handleCountry = (e) => {
-    setCountry(e.target.value);
-    setErrCountry("");
-  };
-  const handleZip = (e) => {
-    setZip(e.target.value);
-    setErrZip("");
-  };
+
   // ============= Event Handler End here ===============
 
   // ================= Email Validation start here =============
@@ -81,67 +68,44 @@ const SignUp = () => {
       .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   };
   // ================= Email Validation End here ===============
+  const nameParts = clientName.split(" ");
+  const prenom = nameParts[0]; // Prénom (première partie)
+  const nom = nameParts[nameParts.length - 1]; // Nom (dernière partie)
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
+
     if (checked) {
-      if (!clientName) {
-        setErrClientName("Entrez votre nom");
-      }
-      if (!email) {
-        setErrEmail("Entrez votre email");
-      } else {
-        if (!EmailValidation(email)) {
-          setErrEmail("Entrez un email valide");
-        }
-      }
-      if (!phone) {
-        setErrPhone("Entrez votre numéro de téléphone");
-      }
-      if (!password) {
-        setErrPassword("Créez un mot de passe");
-      } else {
-        if (password.length < 6) {
-          setErrPassword(
-            "Les mots de passe doivent contenir au moins 6 caractères"
-          );
-        }
-      }
-      if (!address) {
-        setErrAddress("Entrez votre adresse");
-      }
-      if (!city) {
-        setErrCity("Entrez le nom de votre ville");
-      }
-      if (!country) {
-        setErrCountry("Entrez le pays dans lequel vous résidez");
-      }
-      if (!zip) {
-        setErrZip("Entrez le code postal de votre région");
-      }
-      // ============== Récupération de la valeur ==============
-      if (
-        clientName &&
-        email &&
-        EmailValidation(email) &&
-        password &&
-        password.length >= 6 &&
-        address &&
-        city &&
-        country &&
-        zip
-      ) {
-        setSuccessMsg(
-          `Bonjour cher(e) ${clientName}, Bienvenue sur le panneau d'administration OREBI. Nous avons reçu votre demande d'inscription. Nous sommes en train de traiter votre accès. D'ici là, restez connecté(e) et une assistance supplémentaire vous sera envoyée par email à ${email}`
+      try {
+        // Requête POST vers l'API register
+        const response = await axios.post(
+          "http://localhost:8000/api/register",
+          {
+            prenom, // Le prénom extrait
+            nom, // Le nom extrait (juste la dernière partie)
+            telephone: phone,
+            email,
+            password,
+            role,
+          }
         );
+
+        // Si la requête est réussie
+        setSuccessMsg(response.data.message); // ou autre retour que ton API renvoie
+        // Réinitialiser les champs du formulaire
         setClientName("");
         setEmail("");
         setPhone("");
         setPassword("");
         setAddress("");
-        setCity("");
-        setCountry("");
-        setZip("");
+        setRole("student"); // Réinitialiser le rôle
+        // Rediriger vers la page de connexion ou autre
+        navigate("/signin");
+      } catch (error) {
+        // Gérer les erreurs
+        setErrorMsg(
+          error.response?.data?.message || "Erreur lors de l'inscription"
+        );
       }
     }
   };
@@ -292,75 +256,24 @@ const SignUp = () => {
                     <p className="text-red-600 text-sm">{errAddress}</p>
                   )}
                 </div>
-
-                {/* City */}
+                {/* Select Role */}
                 <div className="flex flex-col gap-1">
                   <label
-                    htmlFor="city"
+                    htmlFor="role"
                     className="text-sm font-titleFont font-medium"
                   >
-                    Ville <span className="text-red-600">*</span>
+                    Sélectionnez un rôle <span className="text-red-600">*</span>
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="city"
-                      value={city}
-                      onChange={handleCity}
-                      placeholder="Entrer votre ville"
-                      className="w-full h-12 pl-10 text-base rounded-md border border-gray-300 bg-gray-200 outline-none"
-                    />
-                    <BsFillPinMapFill className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-600 text-xl" />
-                  </div>
-                  {errCity && <p className="text-red-600 text-sm">{errCity}</p>}
-                </div>
-
-                {/* Country */}
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="country"
-                    className="text-sm font-titleFont font-medium"
+                  <select
+                    id="role"
+                    value={role}
+                    onChange={handleRoleChange} // Gérer le changement de rôle
+                    className="w-full h-12 pl-3 text-base rounded-md border border-gray-300 bg-gray-200 outline-none"
                   >
-                    Pays <span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="country"
-                      value={country}
-                      onChange={handleCountry}
-                      placeholder="Entrer votre pays"
-                      className="w-full h-12 pl-10 text-base rounded-md border border-gray-300 bg-gray-200 outline-none"
-                    />
-                    <BsFillGeoAltFill className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-600 text-xl" />
-                  </div>
-                  {errCountry && (
-                    <p className="text-red-600 text-sm">{errCountry}</p>
-                  )}
+                    <option value="student">Étudiant</option>
+                    <option value="prof">Professeur</option>
+                  </select>
                 </div>
-
-                {/* Zip Code */}
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="zip"
-                    className="text-sm font-titleFont font-medium"
-                  >
-                    Code Postale<span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="zip"
-                      value={zip}
-                      onChange={handleZip}
-                      placeholder="Entrer le code postale"
-                      className="w-full h-12 pl-10 text-base rounded-md border border-gray-300 bg-gray-200 outline-none"
-                    />
-                    <BsFillPinMapFill className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-600 text-xl" />
-                  </div>
-                  {errZip && <p className="text-red-600 text-sm">{errZip}</p>}
-                </div>
-
                 {/* Checkbox */}
                 <div className="flex items-center gap-2">
                   <input
@@ -390,6 +303,7 @@ const SignUp = () => {
             </div>
           </form>
         )}
+        {errorMsg && <p className="text-red-600">{errorMsg}</p>}
       </div>
       <button
         className="absolute top-3 left-4 bg-slate-500 hover:bg-slate-700 text-gray-200 hover:text-white cursor-pointer w-20 h-10 rounded-md text-sm font-medium flex items-center justify-center gap-2 duration-300"

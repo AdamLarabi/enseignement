@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 function AnswerTest() {
   const [testData, setTestData] = useState(null);
@@ -21,6 +22,12 @@ function AnswerTest() {
   };
 
   const handleSubmit = () => {
+    const email = Cookies.get("userEmail");
+    if (email) {
+      alert(`Bonjour, ${email}`);
+    } else {
+      alert("Bonjour, utilisateur !");
+    }
     console.log("Réponses de l'utilisateur :", userAnswers);
   };
 

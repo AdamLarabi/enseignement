@@ -1,56 +1,78 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate("/");
-  };
 
   // ============= État Initial Début ici =============
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // ============= État Initial Fin ici ===============
 
-  // ============= Messages d'Erreur Début ici =================
+  // Récupérer les cookies sur le premier rendu
+  useEffect(() => {
+    const storedEmail = Cookies.get("userEmail");
+    const storedPassword = Cookies.get("userPassword");
+    if (storedEmail) setEmail(storedEmail);
+    if (storedPassword) setPassword(storedPassword);
+  }, []);
+
+  // ============= État des erreurs =================
   const [errEmail, setErrEmail] = useState("");
   const [errPassword, setErrPassword] = useState("");
-  // ============= Messages d'Erreur Fin ici ===================
-
   const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   // ============= Gestionnaire d'Événements Début ici =============
   const handleEmail = (e) => {
     setEmail(e.target.value);
     setErrEmail("");
+    setErrorMsg(""); // Réinitialiser le message d'erreur
   };
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setErrPassword("");
+    setErrorMsg(""); // Réinitialiser le message d'erreur
   };
   // ============= Gestionnaire d'Événements Fin ici ===============
 
-  const handleSignUp = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
     if (!email) {
       setErrEmail("Veuillez entrer votre email");
+      return;
     }
 
     if (!password) {
       setErrPassword("Veuillez créer un mot de passe");
+      return;
     }
 
-    // ============== Récupération des valeurs ==============
-    if (email && password) {
-      setSuccessMsg(
-        `Bonjour cher utilisateur, merci pour votre tentative. Nous sommes en train de valider votre accès. En attendant, restez connecté et une assistance supplémentaire vous sera envoyée par email à ${email}`
+    try {
+      const response = await axios.post("http://localhost:8000/api/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        Cookies.set("userEmail", email, { expires: 365 });
+        Cookies.set("userPassword", password, { expires: 365 });
+        setSuccessMsg(
+          "Bonjour cher utilisateur, vous êtes maintenant connecté."
+        );
+        setEmail("");
+        setPassword("");
+        navigate("/AnswerTest");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      setErrorMsg(
+        error.response?.data?.message ||
+          "Erreur lors de la connexion. Veuillez réessayer."
       );
-      setEmail("");
-      setPassword("");
     }
   };
 
@@ -63,16 +85,13 @@ const SignIn = () => {
               {successMsg}
             </p>
             <Link to="/signup">
-              <button
-                className="w-full h-10 bg-primeColor text-gray-200 rounded-md text-base font-titleFont font-semibold 
-                tracking-wide hover:bg-black hover:text-white duration-300 pt-2 pb-2 pr-8 pl-8"
-              >
+              <button className="w-full h-10 bg-primeColor text-gray-200 rounded-md text-base font-titleFont font-semibold tracking-wide hover:bg-black hover:text-white duration-300 pt-2 pb-2 pr-8 pl-8">
                 S'inscrire
               </button>
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSignUp} className="flex flex-col gap-4">
+          <form onSubmit={handleSignIn} className="flex flex-col gap-4">
             <h1 className="font-titleFont text-3xl font-semibold text-center mb-6">
               Connexion
             </h1>
@@ -124,6 +143,14 @@ const SignIn = () => {
               )}
             </div>
 
+            {/* Erreur de connexion */}
+            {errorMsg && (
+              <p className="text-sm text-red-500 font-semibold">
+                <span className="font-bold italic mr-1">!</span>
+                {errorMsg}
+              </p>
+            )}
+
             <button
               type="submit"
               className="bg-slate-800 hover:bg-slate-600 text-gray-200 hover:text-white cursor-pointer w-full h-12 rounded-md text-base font-medium duration-300"
@@ -141,13 +168,6 @@ const SignIn = () => {
           </form>
         )}
       </div>
-      <button
-        className="absolute top-3 left-4 bg-slate-500 hover:bg-slate-700 text-gray-200 hover:text-white cursor-pointer w-20 h-10 rounded-md text-sm font-medium flex items-center justify-center gap-2 duration-300"
-        onClick={handleNavigate}
-      >
-        <FaArrowLeft />
-        Accueil
-      </button>
     </div>
   );
 };
