@@ -86,6 +86,7 @@ const SignUp = () => {
             telephone: phone,
             email,
             password,
+            addresse: address,
             role,
           }
         );
@@ -271,7 +272,7 @@ const SignUp = () => {
                     className="w-full h-12 pl-3 text-base rounded-md border border-gray-300 bg-gray-200 outline-none"
                   >
                     <option value="student">Étudiant</option>
-                    <option value="prof">Professeur</option>
+                    <option value="professor">Professeur</option>
                   </select>
                 </div>
                 {/* Checkbox */}

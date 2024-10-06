@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
-function QCMSettings() {
+function QCMSettings({ setQuestions }) {
   const [numberOfQuestions, setNumberOfQuestions] = useState(1);
-  const [questions, setQuestions] = useState([
+  const [localQuestions, setLocalQuestions] = useState([
     { question: "", options: ["", "", ""], correctOption: "" },
   ]);
   const [feedback, setFeedback] = useState("");
 
+  useEffect(() => {
+    // Met à jour les questions dans le parent à chaque modification
+    setQuestions(localQuestions);
+  }, [localQuestions, setQuestions]);
+
   const handleNumberOfQuestionsIncrease = () => {
     if (numberOfQuestions < 20) {
-      // Limite à 20 questions
       setNumberOfQuestions((prev) => prev + 1);
-      setQuestions((prev) => [
+      setLocalQuestions((prev) => [
         ...prev,
         { question: "", options: ["", "", ""], correctOption: "" },
       ]);
@@ -27,17 +31,22 @@ function QCMSettings() {
   const handleNumberOfQuestionsDecrease = () => {
     if (numberOfQuestions > 1) {
       setNumberOfQuestions((prev) => prev - 1);
-      setQuestions((prev) => prev.slice(0, -1));
+      setLocalQuestions((prev) => prev.slice(0, -1));
       setFeedback("Question supprimée !");
       setTimeout(() => setFeedback(""), 2000);
     }
   };
 
-  const handleSubmit = () => {
-    // Ici, vous pouvez gérer la soumission des questions
-    console.log("Questions soumises :", questions);
-    setFeedback("QCM soumis avec succès !");
-    setTimeout(() => setFeedback(""), 2000);
+  const handleQuestionChange = (index, field, value) => {
+    const updatedQuestions = [...localQuestions];
+    updatedQuestions[index][field] = value;
+    setLocalQuestions(updatedQuestions);
+  };
+
+  const handleOptionChange = (questionIndex, optionIndex, value) => {
+    const updatedQuestions = [...localQuestions];
+    updatedQuestions[questionIndex].options[optionIndex] = value;
+    setLocalQuestions(updatedQuestions);
   };
 
   return (
@@ -67,17 +76,15 @@ function QCMSettings() {
           style={{ width: `${(numberOfQuestions / 20) * 100}%` }} // 20 questions == 100%
         ></div>
       </div>
-      {questions.map((q, index) => (
+      {localQuestions.map((q, index) => (
         <div key={index} className="mb-4">
           <label className="block mb-2">Question {index + 1} :</label>
           <input
             type="text"
             value={q.question}
-            onChange={(e) => {
-              const newQuestions = [...questions];
-              newQuestions[index].question = e.target.value;
-              setQuestions(newQuestions);
-            }}
+            onChange={(e) =>
+              handleQuestionChange(index, "question", e.target.value)
+            }
             placeholder="Entrez votre question"
             className="w-full mb-2 p-2 border rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100"
           />
@@ -87,11 +94,9 @@ function QCMSettings() {
               key={optIndex}
               type="text"
               value={option}
-              onChange={(e) => {
-                const newQuestions = [...questions];
-                newQuestions[index].options[optIndex] = e.target.value;
-                setQuestions(newQuestions);
-              }}
+              onChange={(e) =>
+                handleOptionChange(index, optIndex, e.target.value)
+              }
               placeholder={`Option ${optIndex + 1}`}
               className="w-full mb-2 p-2 border rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100"
             />
@@ -99,11 +104,9 @@ function QCMSettings() {
           <label className="block mb-2">Réponse correcte :</label>
           <select
             value={q.correctOption}
-            onChange={(e) => {
-              const newQuestions = [...questions];
-              newQuestions[index].correctOption = e.target.value;
-              setQuestions(newQuestions);
-            }}
+            onChange={(e) =>
+              handleQuestionChange(index, "correctOption", e.target.value)
+            }
             className="w-full mb-2 p-2 border rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100"
           >
             <option value="">Sélectionnez une option</option>
@@ -115,12 +118,6 @@ function QCMSettings() {
           </select>
         </div>
       ))}
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transform transition-transform duration-200 hover:scale-105"
-      >
-        Soumettre
-      </button>
     </div>
   );
 }

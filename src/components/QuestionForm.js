@@ -1,34 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function QuestionForm() {
+function QuestionForm({ setQuestions }) {
   const [questionText, setQuestionText] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Traitez l'envoi de la question ici
-    console.log("Question simple soumise:", questionText);
-    setQuestionText("");
-  };
+  // Met à jour la question à chaque changement de l'input
+  useEffect(() => {
+    if (questionText.trim()) {
+      setQuestions([{ text: questionText }]); // Mettez à jour l'état avec une seule question
+    } else {
+      setQuestions([]); // Réinitialiser si le champ est vide
+    }
+  }, [questionText, setQuestions]);
 
   return (
-    <div className="bg-white p-4 rounded shadow-md">
-      <h2 className="text-xl font-semibold mb-2">Créer une Question Simple</h2>
-      <form onSubmit={handleSubmit}>
-        <label className="block mb-2">Question :</label>
-        <input
-          type="text"
-          value={questionText}
-          onChange={(e) => setQuestionText(e.target.value)}
-          placeholder="Entrez votre question"
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Soumettre
-        </button>
-      </form>
+    <div>
+      <h2 className="text-2xl font-semibold">Ajouter une question simple</h2>
+      <input
+        type="text"
+        value={questionText}
+        onChange={(e) => setQuestionText(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-lg mt-2"
+        placeholder="Entrez votre question ici"
+      />
     </div>
   );
 }
