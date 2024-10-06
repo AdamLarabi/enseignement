@@ -62,11 +62,11 @@ const SignUp = () => {
   // ============= Event Handler End here ===============
 
   // ================= Email Validation start here =============
-  const EmailValidation = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
-  };
+  // const EmailValidation = (email) => {
+  //   return String(email)
+  //     .toLowerCase()
+  //     .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
+  // };
   // ================= Email Validation End here ===============
   const nameParts = clientName.split(" ");
   const prenom = nameParts[0]; // Prénom (première partie)

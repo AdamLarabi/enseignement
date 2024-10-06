@@ -22,6 +22,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import CreateTest from "./pages/CreateTest";
 import AnswerTest from "./pages/AnswerTest";
+import Student from "./pages/Student";
+import Professor from "./pages/Prof";
+import Profile from "./pages/Profile";
 
 const Layout = () => {
   return (
@@ -61,6 +64,9 @@ const router = createBrowserRouter(
         <Route path="/contact" element={<Contact />} />
         <Route path="/createTest" element={<CreateTest />} />
         <Route path="/AnswerTest" element={<AnswerTest />} />
+        <Route path="/student" element={<Student />} />
+        <Route path="/prof" element={<Professor />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Route>
       <Route path="/signup" element={<SignUp />}></Route>
