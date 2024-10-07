@@ -9,7 +9,7 @@ const FooterBottom = () => {
           <span className="text-md mr-[1px] mt-[2px] md:mt-0 text-center hidden md:inline-flex">
             <AiOutlineCopyright />
           </span>
-          Copyright 2022 | Tous droits réservés |
+          Copyright 2024 | Tous droits réservés | adamlarabi10@gmail.com |
           <a href="#ew" rel="noreferrer">
             <span className="ml-1 font-medium group-hover:text-primeColor">
               Propulsé par Entreprise de technologie éducative

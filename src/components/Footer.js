@@ -7,7 +7,7 @@ function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center px-6">
           <div className="text-sm">
-            &copy; {new Date().getFullYear()} Your Company. All rights reserved.
+            &copy; {new Date().getFullYear()} | All rights reserved.
           </div>
           <div className="flex space-x-4">
             <a

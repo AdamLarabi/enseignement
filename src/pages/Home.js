@@ -1,7 +1,8 @@
 import React from "react";
 import img4 from "../assets/img4.jpg";
-import { FaLock, FaRocket, FaCog, FaBars } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaLock, FaRocket, FaCog } from "react-icons/fa";
+// import { FaBars } from "react-icons/fa";
+// import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -28,41 +29,41 @@ const features = [
 ];
 
 function Home() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleCreate = (e) => {
-    const buttonText = document.getElementById("button-text");
-    const button = document.getElementById("order-button");
-    const icon = document.getElementById("menu-icon");
+  // const handleCreate = (e) => {
+  //   const buttonText = document.getElementById("button-text");
+  //   const button = document.getElementById("order-button");
+  //   const icon = document.getElementById("menu-icon");
 
-    buttonText.style.display = "none";
-    icon.classList.remove("hidden");
-    icon.classList.add("animate-menu-icon");
-    button.style.background = "none";
-    button.classList.remove("rounded-lg", "shadow-lg");
+  //   buttonText.style.display = "none";
+  //   icon.classList.remove("hidden");
+  //   icon.classList.add("animate-menu-icon");
+  //   button.style.background = "none";
+  //   button.classList.remove("rounded-lg", "shadow-lg");
 
-    // Delay navigation until the animation finishes
-    setTimeout(() => {
-      navigate("/createTest");
-    }, 2000);
-  };
+  //   // Delay navigation until the animation finishes
+  //   setTimeout(() => {
+  //     navigate("/createTest");
+  //   }, 2000);
+  // };
 
-  const handleAnswer = (e) => {
-    const buttonText = document.getElementById("button-text1");
-    const button = document.getElementById("order-button1");
-    const icon = document.getElementById("menu-icon1");
+  // const handleAnswer = (e) => {
+  //   const buttonText = document.getElementById("button-text1");
+  //   const button = document.getElementById("order-button1");
+  //   const icon = document.getElementById("menu-icon1");
 
-    buttonText.style.display = "none";
-    icon.classList.remove("hidden");
-    icon.classList.add("animate-menu-icon");
-    button.style.background = "none";
-    button.classList.remove("rounded-lg", "shadow-lg");
+  //   buttonText.style.display = "none";
+  //   icon.classList.remove("hidden");
+  //   icon.classList.add("animate-menu-icon");
+  //   button.style.background = "none";
+  //   button.classList.remove("rounded-lg", "shadow-lg");
 
-    // Delay navigation until the animation finishes
-    setTimeout(() => {
-      navigate("/AnswerTest");
-    }, 2000);
-  };
+  //   // Delay navigation until the animation finishes
+  //   setTimeout(() => {
+  //     navigate("/AnswerTest");
+  //   }, 2000);
+  // };
 
   return (
     <div>
@@ -89,7 +90,7 @@ function Home() {
               Lire plus
             </a>
             <a
-              href="#contact"
+              href="/contact"
               className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-green-500 transition-transform transform hover:scale-105 animate-fade-in delay-600"
             >
               Contactez-nous
@@ -124,7 +125,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-100 text-center">
+      {/* <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-8">
           Prêt à creer un Test?
         </h2>
@@ -155,7 +156,7 @@ function Home() {
             id="menu-icon1"
           />
         </button>
-      </section>
+      </section> */}
     </div>
   );
 }

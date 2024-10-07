@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Loading from "../components/Loading"; // Import the Loading component
+import { FaArrowLeft } from "react-icons/fa";
 
 const SignIn = () => {
   const navigate = useNavigate();
-
+  const handleNavigate = () => {
+    navigate("/");
+  };
   // ============= État Initial Début ici =============
 
   const [email, setEmail] = useState("");
@@ -189,6 +192,13 @@ const SignIn = () => {
           </p>
         </form>
       </div>
+      <button
+        className="absolute top-3 left-4 bg-slate-500 hover:bg-slate-700 text-gray-200 hover:text-white cursor-pointer w-20 h-10 rounded-md text-sm font-medium flex items-center justify-center gap-2 duration-300"
+        onClick={handleNavigate}
+      >
+        <FaArrowLeft />
+        Home
+      </button>
     </div>
   );
 };

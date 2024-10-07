@@ -3,7 +3,7 @@ import QCMSettings from "../components/QCMSettings";
 import QuestionForm from "../components/QuestionForm";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { FiCopy } from "react-icons/fi"; // Assurez-vous d'avoir react-icons installé
+import { FiCopy } from "react-icons/fi";
 
 function CreateTest() {
   const [testType, setTestType] = useState("qcm");
@@ -65,7 +65,7 @@ function CreateTest() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(testCode); // Copier le code dans le presse-papiers
-    alert("Code copié dans le presse-papiers !");
+    // alert("Code copié dans le presse-papiers !");
   };
 
   return (
